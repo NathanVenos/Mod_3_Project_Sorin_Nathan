@@ -3,7 +3,7 @@ Flatiron School Mod 3 Project
 Presentation: https://docs.google.com/presentation/d/1z7w4-1GHovGrSpr6JhXiQJIVkJqUN8NvYS7Z0hmZ5uE/edit?usp=sharing
   
 # Statistical Analysis of World Bank Indicators <br>
-by Nathan Venos and Sorin Luca
+by Nathan Venos and Sorin Luca  
 This project comprises of two parts:
 1. Statistical analysis of the similarity of fertility rate distributions among coherent geographically selected samples.
 2. Statistical analysis of the correlation between particulate matter air
