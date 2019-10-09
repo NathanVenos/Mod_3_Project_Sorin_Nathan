@@ -1,2 +1,4 @@
 data*
 *bash
+.ipynb_checkpoints
+__pycache__
