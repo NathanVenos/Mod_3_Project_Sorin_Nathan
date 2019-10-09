@@ -34,7 +34,7 @@ def clean_fertility_data(dataframe, sampled_years):
                      inplace=True)
     return dataframe
 
-def dist_plots(dfs_list, titles_list, sample_col):
+def dist_plots(dfs_list, titles_list, sample_col, png_title):
     """
     Generating Seaborn distribution plots with the mean delineated for the desired subsets of the data.
     """
@@ -56,30 +56,29 @@ def dist_plots(dfs_list, titles_list, sample_col):
             ax = axes[col]
         data = dfs_list[i][sample_col]
         mean = round(data.mean(), 3)
+        variance = round(data.var(),3)
+        n_samples = data.shape[0]
         sns.distplot(data, ax = ax)
         ax.set_ylim(top=1)
         ax.axvline(x=mean, ymin=0, ymax=1.1, color='red')
-        note = "Mean = "+str(mean)+", Skew = "+str(round(skew(data),3))
-        ax.annotate(s=note,
+        note_top = "Mean = "+str(mean)+", Variance = "+str(variance)
+        note_bottom = "# of Samples ="+str(n_samples)+", Skew = "+str(round(skew(data),3))
+        ax.annotate(s=note_top,
                     xy=(mean, ax.get_ylim()[1]/2),
-                    xytext=(30, 58),
+                    xytext=(10, 80),
+                    textcoords='offset points')
+        ax.annotate(s=note_bottom,
+                    xy=(mean, ax.get_ylim()[1]/2),
+                    xytext=(10, 65),
                     textcoords='offset points')
         ax.set_title(titles_list[i])
-        # interval_start = round(np.percentile(data, 5), 3)
-        # interval_end = round(np.percentile(data, 95), 3)
-        # interval_note = "5-95% percentile interval = "+str(interval_start)+' - '+str(interval_start)
-        # ax.axvline(x=interval_start, ymin=0, ymax=1.1, color='purple')
-        # ax.axvline(x=interval_end, ymin=0, ymax=1.1, color='purple')
-        # ax.annotate(s=interval_note,
-        #             xy=(interval_end, ax.get_ylim()[1]/2),
-        #             xytext=(30, 30),
-        #             textcoords='offset points')
         if col < 2:
             col += 1
         else:
             col = 0
             row += 1
     plt.subplots_adjust(hspace=0.3)
+    plt.savefig(png_title+'.png', dpi=300, bbox_inches='tight')
 
 def three_way_welch_test_w_pop(series_list, groups_list, alpha):
     import pandas as pd
@@ -169,7 +168,7 @@ def point_estimate_distributions(sample_input, sub_samples_list, sub_samples_tit
     for samp in sub_samples_list:
         samps_mean = round(samp.mean(), 3)
         sub_sample_means.append(samps_mean)
-        samp_pct = round((sum((point_estimates <= samps_mean)) / points)*100, 2)
+        samp_pct = round((sum((point_estimates < samps_mean)) / points)*100, 2)
         sub_sample_cdf_pcts.append(samp_pct)
 
     cdf.axvline(x=sub_sample_means[0],
@@ -200,4 +199,5 @@ def point_estimate_distributions(sample_input, sub_samples_list, sub_samples_tit
                  textcoords='offset points')
 
     plt.subplots_adjust(hspace=0.3)
+    plt.savefig('500-Point_Estimate_Dist.png', dpi=300, bbox_inches='tight')
     plt.show()
